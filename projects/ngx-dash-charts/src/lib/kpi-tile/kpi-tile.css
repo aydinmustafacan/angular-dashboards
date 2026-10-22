@@ -1,0 +1,88 @@
+dash-kpi-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: 16px 18px 12px;
+  border: 1px solid var(--dash-border, rgba(21, 32, 43, 0.12));
+  border-radius: 12px;
+  background: var(--dash-surface, #fbfcfc);
+  color: var(--dash-ink, #15202b);
+  font-family: var(--dash-font, system-ui, sans-serif);
+  outline: none;
+}
+
+dash-kpi-tile.is-interactive {
+  cursor: pointer;
+}
+
+dash-kpi-tile.is-interactive:hover {
+  border-color: var(--dash-baseline, #c2c9cf);
+}
+
+dash-kpi-tile:focus-visible {
+  outline: 2px solid var(--dash-accent, #1d4f91);
+  outline-offset: 2px;
+}
+
+.dash-kpi__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.dash-kpi__label {
+  margin: 0;
+  color: var(--dash-ink-2, #4d5a66);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.dash-kpi__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--dash-ink-2, #4d5a66);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.dash-kpi__status.is-good svg { color: var(--dash-status-good, #0ca30c); }
+.dash-kpi__status.is-warning svg { color: var(--dash-status-warning, #fab219); }
+.dash-kpi__status.is-serious svg { color: var(--dash-status-serious, #ec835a); }
+.dash-kpi__status.is-critical svg { color: var(--dash-status-critical, #d03b3b); }
+
+.dash-kpi__value {
+  margin: 4px 0 0;
+  font-size: 2rem;
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.dash-kpi__delta {
+  margin: 0;
+  color: var(--dash-ink-2, #4d5a66);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.dash-kpi__delta.is-good { color: var(--dash-good-text, #006300); }
+.dash-kpi__delta.is-bad { color: var(--dash-bad-text, #b42828); }
+
+.dash-kpi__delta-label {
+  color: var(--dash-muted, #7d8893);
+}
+
+.dash-kpi__spark {
+  height: var(--dash-chart-height, 44px);
+  margin: 8px -4px 0;
+}
+
+.dash-kpi__caption {
+  margin: 6px 0 0;
+  color: var(--dash-muted, #7d8893);
+  font-size: 0.75rem;
+}

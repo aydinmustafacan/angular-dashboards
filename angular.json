@@ -1,0 +1,132 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": {
+    "packageManager": "npm",
+    "analytics": "19511e28-6f60-4afc-be58-651a5d1cc997"
+  },
+  "newProjectRoot": "projects",
+  "projects": {
+    "ngx-dash-charts": {
+      "projectType": "library",
+      "root": "projects/ngx-dash-charts",
+      "sourceRoot": "projects/ngx-dash-charts/src",
+      "prefix": "dash",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ngx-dash-charts/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ngx-dash-charts/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/ngx-dash-charts/tsconfig.spec.json"
+          }
+        },
+        "storybook": {
+          "builder": "@storybook/angular-vite:start-storybook",
+          "options": {
+            "configDir": "projects/ngx-dash-charts/.storybook",
+            "browserTarget": "ngx-dash-charts:build",
+            "port": 6006,
+            "styles": [
+              "projects/ngx-dash-charts/.storybook/storybook.scss"
+            ],
+            "zoneless": true,
+            "tsConfig": "projects/ngx-dash-charts/.storybook/tsconfig.json",
+            "ci": false
+          }
+        },
+        "build-storybook": {
+          "builder": "@storybook/angular-vite:build-storybook",
+          "options": {
+            "configDir": "projects/ngx-dash-charts/.storybook",
+            "browserTarget": "ngx-dash-charts:build",
+            "outputDir": "dist/storybook/ngx-dash-charts",
+            "styles": [
+              "projects/ngx-dash-charts/.storybook/storybook.scss"
+            ],
+            "zoneless": true,
+            "tsConfig": "projects/ngx-dash-charts/.storybook/tsconfig.json"
+          }
+        }
+      }
+    },
+    "showcase": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/showcase",
+      "sourceRoot": "projects/showcase/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "projects/showcase/src/main.ts",
+            "tsConfig": "projects/showcase/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "projects/showcase/public"
+              }
+            ],
+            "styles": [
+              "projects/showcase/src/styles.scss"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "1.6MB",
+                  "maximumError": "2MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "showcase:build:production"
+            },
+            "development": {
+              "buildTarget": "showcase:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test"
+        }
+      }
+    }
+  }
+}

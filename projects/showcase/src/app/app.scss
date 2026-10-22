@@ -1,0 +1,45 @@
+:host {
+  display: block;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 3vw, 40px) 48px;
+}
+
+.masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 28px 0 24px;
+}
+
+.masthead__brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.masthead__mark {
+  flex: none;
+  color: var(--dash-accent);
+}
+
+.masthead__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.masthead__meta {
+  margin: 4px 0 0;
+  color: var(--dash-ink-2);
+  font-size: 0.9375rem;
+}
+
+.masthead__theme {
+  flex: none;
+  color: var(--dash-ink-2);
+}

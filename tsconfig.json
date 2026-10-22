@@ -1,0 +1,41 @@
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "ngx-dash-charts": ["./projects/ngx-dash-charts/src/public-api.ts"],
+      "ngx-dash-charts/testing": ["./projects/ngx-dash-charts/testing/src/public-api.ts"]
+    },
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "preserve"
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./projects/ngx-dash-charts/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ngx-dash-charts/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/showcase/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/showcase/tsconfig.spec.json"
+    }
+  ]
+}

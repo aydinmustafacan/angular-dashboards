@@ -1,0 +1,42 @@
+<header class="masthead">
+  <div class="masthead__brand">
+    <svg class="masthead__mark" viewBox="0 0 32 32" width="32" height="32" aria-hidden="true">
+      <rect x="2" y="9" width="18" height="14" rx="2.5" fill="currentColor" />
+      <path d="M20 13h5.2l4.3 5v5H20z" fill="currentColor" opacity=".55" />
+      <circle cx="8.5" cy="24.5" r="3" fill="var(--dash-page)" stroke="currentColor" stroke-width="2" />
+      <circle cx="24" cy="24.5" r="3" fill="var(--dash-page)" stroke="currentColor" stroke-width="2" />
+    </svg>
+    <div>
+      <h1 class="masthead__title">Linehaul operations</h1>
+      <p class="masthead__meta">{{ weekLabel }}. Every chart drills down: click a week, a slice, a bar or a tile.</p>
+    </div>
+  </div>
+  <button
+    matIconButton
+    type="button"
+    class="masthead__theme"
+    [attr.aria-label]="themeLabel()"
+    [matTooltip]="themeLabel()"
+    (click)="cycleTheme()"
+  >
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+      @switch (theme()) {
+        @case ('light') {
+          <circle cx="12" cy="12" r="4.5" fill="currentColor" />
+          <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        }
+        @case ('dark') {
+          <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z" fill="currentColor" />
+        }
+        @default {
+          <circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2" />
+          <path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor" />
+        }
+      }
+    </svg>
+  </button>
+</header>
+
+<main class="content">
+  <dash-demo-operations-overview />
+</main>

@@ -1,0 +1,220 @@
+/* Shared by every dash chart. Unencapsulated so it also reaches ECharts' tooltip DOM. */
+
+dash-trend-chart,
+dash-bar-chart,
+dash-combo-chart,
+dash-pie-chart {
+  display: block;
+  position: relative;
+  border-radius: 8px;
+  outline: none;
+  font-family: var(--dash-font, system-ui, sans-serif);
+}
+
+:is(dash-trend-chart, dash-bar-chart, dash-combo-chart, dash-pie-chart):focus-visible {
+  outline: 2px solid var(--dash-accent, #1d4f91);
+  outline-offset: 4px;
+}
+
+.dash-chart {
+  position: relative;
+}
+
+.dash-chart__canvas {
+  height: var(--dash-chart-height, 320px);
+  transition: opacity 200ms ease;
+}
+
+.dash-chart.is-loading .dash-chart__canvas {
+  opacity: 0.45;
+}
+
+.dash-chart__empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: var(--dash-muted, #7d8893);
+  font-size: 0.875rem;
+  pointer-events: none;
+}
+
+.dash-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ── Tooltip: a compact waybill — dark heading strip, value rows, perforated tear-off hint ── */
+
+.dash-tip-host {
+  z-index: 20 !important;
+}
+
+.dash-tip {
+  --dash-tip-pad: 14px;
+  min-width: 208px;
+  max-width: 320px;
+  overflow: hidden;
+  border: 1px solid var(--dash-border, rgba(21, 32, 43, 0.12));
+  border-radius: 10px;
+  background: var(--dash-surface, #fbfcfc);
+  color: var(--dash-ink, #15202b);
+  box-shadow:
+    0 1px 2px rgba(21, 32, 43, 0.08),
+    0 10px 28px -12px rgba(21, 32, 43, 0.35);
+  font: 400 13px/1.35 var(--dash-font, system-ui, sans-serif);
+  white-space: normal;
+}
+
+.dash-tip--custom {
+  padding: 12px var(--dash-tip-pad);
+}
+
+.dash-tip__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 9px var(--dash-tip-pad) 8px;
+  background: var(--dash-tip-head, var(--dash-ink, #15202b));
+  color: var(--dash-tip-head-ink, var(--dash-surface, #fbfcfc));
+}
+
+.dash-tip__title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.dash-tip__detail {
+  font-size: 12px;
+  opacity: 0.78;
+  font-variant-numeric: tabular-nums;
+}
+
+.dash-tip__body {
+  padding: 8px var(--dash-tip-pad) 9px;
+}
+
+.dash-tip__row {
+  display: grid;
+  grid-template-columns: 14px auto 1fr auto;
+  align-items: center;
+  column-gap: 8px;
+  padding: 3px 0;
+}
+
+.dash-tip__row.is-dim {
+  opacity: 0.5;
+}
+
+.dash-tip__key {
+  width: 14px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--dash-key);
+}
+
+.dash-tip__key.is-dashed {
+  background: repeating-linear-gradient(90deg, var(--dash-key) 0 4px, transparent 4px 7px);
+}
+
+.dash-tip__key.is-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dash-tip__key.is-blank {
+  background: none;
+}
+
+.dash-tip__value {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.dash-tip__name {
+  color: var(--dash-ink-2, #4d5a66);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dash-tip__delta {
+  color: var(--dash-ink-2, #4d5a66);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.dash-tip__delta.is-good {
+  color: var(--dash-good-text, #006300);
+}
+
+.dash-tip__delta.is-bad {
+  color: var(--dash-bad-text, #b42828);
+}
+
+.dash-tip__row--total {
+  margin-top: 4px;
+  padding-top: 7px;
+  border-top: 1px solid var(--dash-grid, #e3e7ea);
+}
+
+.dash-tip__row--ref {
+  font-size: 12px;
+}
+
+.dash-tip__row--child {
+  grid-template-columns: 1fr auto;
+  padding: 1px 0;
+  font-size: 12px;
+}
+
+.dash-tip__children {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--dash-grid, #e3e7ea);
+}
+
+.dash-tip__more {
+  color: var(--dash-muted, #7d8893);
+  font-size: 12px;
+}
+
+.dash-tip__foot {
+  position: relative;
+  padding: 7px var(--dash-tip-pad) 8px;
+  border-top: 1px dashed var(--dash-baseline, #c2c9cf);
+  color: var(--dash-ink-2, #4d5a66);
+  font-size: 12px;
+}
+
+/* Tear-off notches at either end of the perforation. */
+.dash-tip__foot::before,
+.dash-tip__foot::after {
+  content: '';
+  position: absolute;
+  top: -6px;
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--dash-border, rgba(21, 32, 43, 0.12));
+  border-radius: 50%;
+  background: var(--dash-page, #eef1f3);
+}
+
+.dash-tip__foot::before {
+  left: -6px;
+}
+
+.dash-tip__foot::after {
+  right: -6px;
+}

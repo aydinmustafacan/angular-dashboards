@@ -1,0 +1,53 @@
+@use '@angular/material' as mat;
+@use '../styles/dash-theme.css';
+
+html {
+  color-scheme: light dark;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$orange-palette,
+      ),
+      typography: Barlow,
+      density: 0,
+    )
+  );
+}
+
+html[data-theme='light'] {
+  color-scheme: light;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+:root {
+  --dash-font: 'Barlow', system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--dash-page);
+  color: var(--dash-ink);
+  font-family: var(--dash-font);
+}
+
+.sb-show-main.sb-main-padded {
+  padding: 24px;
+}
+
+/* Drill-down template content used by stories. */
+.drill-heading {
+  margin: 24px 0 8px;
+  color: var(--dash-ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.drill-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}

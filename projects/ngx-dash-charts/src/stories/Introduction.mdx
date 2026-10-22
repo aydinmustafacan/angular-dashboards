@@ -1,0 +1,89 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Introduction" />
+
+# ngx-dash-charts
+
+Reusable, domain-agnostic dashboard charts for Angular 22 and Angular Material 3, built on Apache ECharts.
+Every component is standalone, signal-based and themeable, and works without Zone.js.
+
+| Component | What it's for |
+| --- | --- |
+| `dash-trend-chart` | Lines and areas over weeks, days, months or categories |
+| `dash-combo-chart` | Columns and lines on one shared axis |
+| `dash-bar-chart` | Grouped or stacked bars, vertical or horizontal |
+| `dash-pie-chart` | Donut or pie with selection, a live centre label and folding into "Other" |
+| `dash-kpi-tile` | A headline number, its change and a sparkline |
+| `dash-chart-card` | Material card frame with a table view and PNG / CSV export |
+| `dash-grid`, `dashSpan` | 12-column dashboard layout that responds to its container |
+| `dash-stat-list`, `dash-data-table` | Building blocks for drill-down panels and table views |
+
+## Set up
+
+```ts
+// app.config.ts
+import { provideDashCharts } from 'ngx-dash-charts';
+
+export const appConfig = { providers: [provideDashCharts()] };
+```
+
+```json
+// angular.json → styles
+"styles": ["node_modules/ngx-dash-charts/styles/dash-theme.css", "src/styles.scss"]
+```
+
+## Interactivity, everywhere
+
+- **Hover** anywhere in a column. The crosshair snaps to the nearest period, and the tooltip lists every series, its change vs. the previous period, the stack total and any reference lines.
+- **Click** a period, bar, slice or tile. `pointClick` emits a typed context: the period, every value, deltas, shares and your `meta`. If you pass a `drilldownTemplate`, that template opens in a Material side sheet (or dialog) with the same context.
+- **Keyboard**: focus a chart, then use ← / → to move between points. Enter opens details and Escape clears them. A live region announces each point to screen readers.
+- **Legends** toggle series and re-base shares. **Zoom** with drag or Ctrl/⌘ + wheel, or add a slider.
+- **Custom tooltips**: pass any `ng-template` as `tooltipTemplate`.
+
+```html
+<dash-trend-chart
+  label="Weekly shipments"
+  [series]="series"
+  [thresholds]="[{ value: 13500, label: 'Capacity' }]"
+  [drilldownTemplate]="week"
+  (pointClick)="onWeek($event)"
+/>
+
+<ng-template #week let-ctx let-close="close">
+  <h3>{{ ctx.xLabel }}, {{ ctx.xDetail }}</h3>
+  @for (v of ctx.values; track v.seriesId) {
+    <p>{{ v.seriesName }}: {{ v.formatted }}</p>
+  }
+  <button matButton (click)="close()">Done</button>
+</ng-template>
+```
+
+## Data shape
+
+```ts
+interface DashSeries<M> {
+  id: string;            // colour follows the id, never the rank
+  name: string;
+  data: { x: Date | string | number; y: number | null; meta?: M }[];
+  type?: 'line' | 'area' | 'bar';
+  stack?: string;
+  slot?: number;         // palette slot 1–8
+  dashed?: boolean;      // forecasts, targets
+  upIsGood?: boolean;    // colours deltas
+  format?: DashValueFormat;
+}
+```
+
+## Theming
+
+Charts paint with `--dash-*` CSS custom properties: surface, ink, grid, accent, eight categorical slots and four status colours.
+The default categorical order is validated for colour-vision deficiency in both light and dark mode.
+Dark mode follows the OS setting, and `data-theme="dark"` / `"light"` on `<html>` overrides it. Charts repaint live when either changes.
+Use the **Theme** button in the toolbar above to try it.
+
+## Design choices
+
+- **One value axis.** Two measures on different scales belong in two charts. Dual axes invite false correlations.
+- **Status is never colour alone.** It always comes with an icon and a word.
+- **The previous render stays while loading**, dimmed. Nothing jumps or flashes.
+- **A table view is always one click away** in `dash-chart-card`, so no value is reachable only by hovering.

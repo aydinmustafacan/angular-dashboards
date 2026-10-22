@@ -1,0 +1,84 @@
+/*
+ * ngx-dash-charts design tokens. Include once, globally:
+ *   "styles": ["node_modules/ngx-dash-charts/styles/dash-theme.css", …]
+ * Override any token on :root (or a wrapper) to brand the charts. Colours must be 6-digit hex.
+ * Dark values follow the OS setting; [data-theme="light" | "dark"] on <html> forces either way.
+ * The categorical order is validated for colour-vision deficiency — reorder only after re-validating.
+ */
+
+:root {
+  --dash-font: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --dash-page: #eef1f3;
+  --dash-surface: #fbfcfc;
+  --dash-ink: #15202b;
+  --dash-ink-2: #4d5a66;
+  --dash-muted: #7d8893;
+  --dash-grid: #e3e7ea;
+  --dash-baseline: #c2c9cf;
+  --dash-border: rgba(21, 32, 43, 0.12);
+  --dash-accent: #1d4f91;
+  --dash-good-text: #006300;
+  --dash-bad-text: #b42828;
+
+  --dash-series-1: #2a78d6;
+  --dash-series-2: #eb6834;
+  --dash-series-3: #1baf7a;
+  --dash-series-4: #eda100;
+  --dash-series-5: #e87ba4;
+  --dash-series-6: #008300;
+  --dash-series-7: #6250d6;
+  --dash-series-8: #e34948;
+
+  --dash-status-good: #0ca30c;
+  --dash-status-warning: #fab219;
+  --dash-status-serious: #ec835a;
+  --dash-status-critical: #d03b3b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme='light'])) {
+    --dash-page: #0e1215;
+    --dash-surface: #161a1d;
+    --dash-ink: #e8edf1;
+    --dash-ink-2: #b7c0c8;
+    --dash-muted: #84909b;
+    --dash-grid: #262c31;
+    --dash-baseline: #3a4249;
+    --dash-border: rgba(255, 255, 255, 0.1);
+    --dash-accent: #8fb6ec;
+    --dash-good-text: #3cc13c;
+    --dash-bad-text: #f08484;
+
+    --dash-series-1: #3987e5;
+    --dash-series-2: #d95926;
+    --dash-series-3: #199e70;
+    --dash-series-4: #c98500;
+    --dash-series-5: #d55181;
+    --dash-series-6: #008300;
+    --dash-series-7: #9085e9;
+    --dash-series-8: #e66767;
+  }
+}
+
+:root[data-theme='dark'] {
+  --dash-page: #0e1215;
+  --dash-surface: #161a1d;
+  --dash-ink: #e8edf1;
+  --dash-ink-2: #b7c0c8;
+  --dash-muted: #84909b;
+  --dash-grid: #262c31;
+  --dash-baseline: #3a4249;
+  --dash-border: rgba(255, 255, 255, 0.1);
+  --dash-accent: #8fb6ec;
+  --dash-good-text: #3cc13c;
+  --dash-bad-text: #f08484;
+
+  --dash-series-1: #3987e5;
+  --dash-series-2: #d95926;
+  --dash-series-3: #199e70;
+  --dash-series-4: #c98500;
+  --dash-series-5: #d55181;
+  --dash-series-6: #008300;
+  --dash-series-7: #9085e9;
+  --dash-series-8: #e66767;
+}

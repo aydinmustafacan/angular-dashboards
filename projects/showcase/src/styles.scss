@@ -1,0 +1,36 @@
+@use '@angular/material' as mat;
+@use '../../ngx-dash-charts/styles/dash-theme.css';
+
+html {
+  color-scheme: light dark;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$azure-palette,
+        tertiary: mat.$orange-palette,
+      ),
+      typography: Barlow,
+      density: 0,
+    )
+  );
+}
+
+html[data-theme='light'] {
+  color-scheme: light;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+:root {
+  --dash-font: 'Barlow', system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--dash-page);
+  color: var(--dash-ink);
+  font-family: var(--dash-font);
+  -webkit-font-smoothing: antialiased;
+}

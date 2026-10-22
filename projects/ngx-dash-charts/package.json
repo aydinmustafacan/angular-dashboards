@@ -1,0 +1,17 @@
+{
+  "name": "ngx-dash-charts",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^22.1.0",
+    "@angular/core": "^22.1.0",
+    "@angular/cdk": "^22.2.0",
+    "@angular/material": "^22.2.0",
+    "echarts": "^6.0.0",
+    "ngx-echarts": "^22.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false,
+  "description": "Reusable, interactive Material dashboard charts for Angular (ECharts under the hood)."
+}
