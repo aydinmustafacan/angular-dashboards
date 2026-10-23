@@ -15,7 +15,8 @@ Every component is standalone, signal-based and themeable, and works without Zon
 | `dash-pie-chart` | Donut or pie with selection, a live centre label and folding into "Other" |
 | `dash-kpi-tile` | A headline number, its change and a sparkline |
 | `dash-chart-card` | Material card frame with a table view and PNG / CSV export |
-| `dash-grid`, `dashSpan` | 12-column dashboard layout that responds to its container |
+| `dash-widget-board` | Drag-and-drop dashboard board (angular-gridster2) with size rules, keyboard moves and saved layouts |
+| `dash-grid`, `dashSpan` | Static 12-column dashboard layout that responds to its container |
 | `dash-stat-list`, `dash-data-table` | Building blocks for drill-down panels and table views |
 
 ## Set up
@@ -56,6 +57,27 @@ export const appConfig = { providers: [provideDashCharts()] };
   }
   <button matButton (click)="close()">Done</button>
 </ng-template>
+```
+
+## Drag-and-drop dashboards
+
+`dash-widget-board` lays widgets out on a board 4 units wide. One unit is one KPI tile. KPI tiles are 1 × 1, charts are 2 wide and 2–3 tall, and `wide` widgets span the board.
+
+- In edit mode, drag a widget to move it, and drag a chart's bottom handle to change its height.
+- Same-sized widgets swap places. A widget can't drop into a row without room for it.
+- With the keyboard, focus a widget and use the arrow keys, or use its move menu.
+
+```html
+<dash-widget-board [(layout)]="layout" [editing]="editing" persistKey="my-dashboard">
+  <ng-template dashWidget="shipments" dashWidgetLabel="Shipments">
+    <dash-kpi-tile height="fill" … />
+  </ng-template>
+  <ng-template dashWidget="trend" dashWidgetLabel="Weekly shipments">
+    <dash-chart-card heading="Weekly shipments">
+      <dash-trend-chart height="fill" … />
+    </dash-chart-card>
+  </ng-template>
+</dash-widget-board>
 ```
 
 ## Data shape

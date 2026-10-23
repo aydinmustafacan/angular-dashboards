@@ -33,6 +33,7 @@ export const DASH_CHART = new InjectionToken<DashChartHandle>('DASH_CHART');
   host: {
     '[attr.aria-label]': 'ariaLabel()',
     '[style.--dash-chart-height]': 'heightCss()',
+    '[class.dash-fill]': 'height() === "fill"',
   },
 })
 export abstract class DashChartBase<E extends DashDrillContext> implements DashChartHandle {
@@ -43,7 +44,7 @@ export abstract class DashChartBase<E extends DashDrillContext> implements DashC
 
   /** Accessible name; also used as the drill-down panel subtitle and export file name. */
   readonly label = input('');
-  /** Plot height: a number of pixels or any CSS length. */
+  /** Plot height: pixels, any CSS length, or `'fill'` to fill a sized parent (e.g. a board cell). */
   readonly height = input<number | string>(320);
   /** Keeps the previous render at reduced opacity while new data loads. */
   readonly loading = input(false);
@@ -70,7 +71,7 @@ export abstract class DashChartBase<E extends DashDrillContext> implements DashC
   protected readonly resolvedLocale = computed(() => this.locale() ?? this.defaultLocale);
   protected readonly heightCss = computed(() => {
     const h = this.height();
-    return typeof h === 'number' ? `${h}px` : h;
+    return typeof h === 'number' ? `${h}px` : h === 'fill' ? '100%' : h;
   });
   protected readonly initOpts = computed(() => ({ renderer: this.renderer() }));
   protected readonly hint = computed(() => {

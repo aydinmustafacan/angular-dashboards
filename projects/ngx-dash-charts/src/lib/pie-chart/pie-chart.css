@@ -117,3 +117,16 @@ dash-pie-chart {
   font-variant-numeric: tabular-nums;
   text-align: right;
 }
+
+dash-pie-chart.dash-fill > .dash-pie {
+  height: 100%;
+}
+
+dash-pie-chart.dash-fill > .dash-pie--legend-bottom {
+  grid-template-rows: minmax(120px, 1fr) auto;
+}
+
+dash-pie-chart.dash-fill .dash-pie__plot {
+  height: 100%;
+  min-height: 0;
+}

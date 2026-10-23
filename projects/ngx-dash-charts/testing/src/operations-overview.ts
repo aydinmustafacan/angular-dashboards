@@ -7,12 +7,12 @@ import {
   DashBarChart,
   DashChartCard,
   DashComboChart,
-  DashGrid,
   DashKpiTile,
   DashPieChart,
-  DashSpan,
   DashStatList,
   DashTrendChart,
+  DashWidget,
+  DashWidgetBoard,
   formatDelta,
   formatShare,
   type DashPointEvent,
@@ -20,10 +20,24 @@ import {
   type DashSlice,
   type DashSliceEvent,
   type DashStat,
+  type DashWidgetLayout,
 } from 'ngx-dash-charts';
 import { logisticsData, type LogisticsData, type Region, type SiteMeta, type WeekMeta } from './logistics-data';
 
 type Weeks = 13 | 26 | 52;
+
+/** 4 units wide: KPI tiles 1×1, charts 2 wide, the mode chart spans the board. */
+const DEFAULT_LAYOUT: DashWidgetLayout[] = [
+  { id: 'shipments', kind: 'kpi', x: 0, y: 0, cols: 1, rows: 1 },
+  { id: 'ontime-kpi', kind: 'kpi', x: 1, y: 0, cols: 1, rows: 1 },
+  { id: 'transit', kind: 'kpi', x: 2, y: 0, cols: 1, rows: 1 },
+  { id: 'claims', kind: 'kpi', x: 3, y: 0, cols: 1, rows: 1 },
+  { id: 'shipments-trend', kind: 'chart', x: 0, y: 1, cols: 2, rows: 3 },
+  { id: 'delays', kind: 'chart', x: 2, y: 1, cols: 2, rows: 3 },
+  { id: 'modes', kind: 'wide', x: 0, y: 4, cols: 4, rows: 2 },
+  { id: 'ontime', kind: 'chart', x: 0, y: 6, cols: 2, rows: 2 },
+  { id: 'sites', kind: 'chart', x: 2, y: 6, cols: 2, rows: 2 },
+];
 
 const REGIONS: { value: Region; label: string }[] = [
   { value: 'all', label: 'All regions' },
@@ -46,12 +60,12 @@ const REGIONS: { value: Region; label: string }[] = [
     DashBarChart,
     DashChartCard,
     DashComboChart,
-    DashGrid,
     DashKpiTile,
     DashPieChart,
-    DashSpan,
     DashStatList,
     DashTrendChart,
+    DashWidget,
+    DashWidgetBoard,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -74,102 +88,124 @@ const REGIONS: { value: Region; label: string }[] = [
           }
         </mat-select>
       </mat-form-field>
+      <span class="spacer"></span>
+      @if (editing()) {
+        <button matButton type="button" (click)="resetLayout()">Reset layout</button>
+      }
+      <button matButton="tonal" type="button" [attr.aria-pressed]="editing()" (click)="editing.set(!editing())">
+        {{ editing() ? 'Done editing' : 'Edit layout' }}
+      </button>
     </div>
+    @if (editing()) {
+      <p class="edit-hint">Drag a widget to move it, or drag a chart's bottom handle to change its height. Widgets of the same size swap places. A widget can't drop into a row without room for it. With the keyboard, focus a widget and use the arrow keys.</p>
+    }
 
-    <dash-grid>
-      <dash-kpi-tile [dashSpan]="3" label="Shipments last week" [trend]="data().totalShipments" [drilldownTemplate]="weekPanel" />
-      <dash-kpi-tile
-        [dashSpan]="3"
-        label="On-time delivery"
-        [trend]="data().onTimeRate[0].data"
-        [valueFormat]="{ style: 'percent', decimals: 1 }"
-        [status]="onTimeStatus()"
-        caption="Target 95%"
-        [drilldownTemplate]="weekPanel"
-      />
-      <dash-kpi-tile
-        [dashSpan]="3"
-        label="Average transit time"
-        [trend]="data().transitDays"
-        [valueFormat]="{ style: 'unit', unit: 'day', decimals: 1 }"
-        [upIsGood]="false"
-        [drilldownTemplate]="weekPanel"
-      />
-      <dash-kpi-tile
-        [dashSpan]="3"
-        label="Damage claims"
-        [trend]="data().damageClaims"
-        [upIsGood]="false"
-        [drilldownTemplate]="weekPanel"
-      />
-
-      <dash-chart-card [dashSpan]="8" heading="Weekly shipments" [subheading]="'Actuals and forecast, ' + scope()" [loading]="loading()">
-        <dash-trend-chart
-          label="Weekly shipments"
-          [series]="data().shipmentsVsForecast"
-          [thresholds]="[data().capacity]"
-          [annotations]="[data().peakSeason]"
-          [loading]="loading()"
-          [height]="380"
-          [drilldownTemplate]="weekPanel"
-        />
-      </dash-chart-card>
-
-      <dash-chart-card [dashSpan]="4" heading="Why shipments ran late" [subheading]="'Delays by cause, ' + scope()" [loading]="loading()">
-        <dash-pie-chart
-          label="Delay causes"
-          totalLabel="Delayed shipments"
-          legendPosition="bottom"
-          selectionMode="multiple"
-          [data]="data().delayCauses"
-          [(selected)]="selectedCauses"
-          [loading]="loading()"
-          [height]="220"
-          [drilldownTemplate]="causePanel"
-        />
-      </dash-chart-card>
-
-      <dash-chart-card [dashSpan]="12" heading="Shipments by transport mode" subheading="Stacked by mode, with the 4-week average of the total" [loading]="loading()">
-        <dash-combo-chart
-          label="Shipments by transport mode"
-          syncGroup="ops-weeks"
-          [series]="modesWithAverage()"
-          [loading]="loading()"
-          [zoom]="weeks() === 52 ? 'slider' : 'none'"
-          [height]="320"
-          [drilldownTemplate]="weekPanel"
-        />
-      </dash-chart-card>
-
-      <dash-chart-card [dashSpan]="6" heading="On-time delivery" [subheading]="'Share delivered by the promised date, ' + scope()" [loading]="loading()">
-        <dash-trend-chart
+    <dash-widget-board [(layout)]="layout" [editing]="editing()" [persistKey]="persistKey()">
+      <ng-template dashWidget="shipments" dashWidgetLabel="Shipments last week">
+        <dash-kpi-tile label="Shipments last week" height="fill" [trend]="data().totalShipments" [drilldownTemplate]="weekPanel" />
+      </ng-template>
+      <ng-template dashWidget="ontime-kpi" dashWidgetLabel="On-time delivery">
+        <dash-kpi-tile
           label="On-time delivery"
-          syncGroup="ops-weeks"
-          [series]="data().onTimeRate"
-          [thresholds]="[data().onTimeTarget]"
-          [yMin]="0.85"
-          [yMax]="1"
-          [smooth]="true"
-          [showEndLabels]="true"
-          [loading]="loading()"
-          [height]="260"
+          height="fill"
+          [trend]="data().onTimeRate[0].data"
+          [valueFormat]="{ style: 'percent', decimals: 1 }"
+          [status]="onTimeStatus()"
+          caption="Target 95%"
           [drilldownTemplate]="weekPanel"
         />
-      </dash-chart-card>
-
-      <dash-chart-card [dashSpan]="6" heading="Busiest sites" subheading="Pallets handled last week" [loading]="loading()">
-        <dash-bar-chart
-          label="Pallets handled per site"
-          orientation="horizontal"
-          granularity="category"
-          [series]="data().throughputBySite"
-          [thresholds]="[{ value: siteTarget(), label: 'Site target', status: 'good' }]"
-          [loading]="loading()"
-          [height]="260"
-          [drilldownTemplate]="sitePanel"
+      </ng-template>
+      <ng-template dashWidget="transit" dashWidgetLabel="Average transit time">
+        <dash-kpi-tile
+          label="Average transit time"
+          height="fill"
+          [trend]="data().transitDays"
+          [valueFormat]="{ style: 'unit', unit: 'day', decimals: 1 }"
+          [upIsGood]="false"
+          [drilldownTemplate]="weekPanel"
         />
-      </dash-chart-card>
-    </dash-grid>
+      </ng-template>
+      <ng-template dashWidget="claims" dashWidgetLabel="Damage claims">
+        <dash-kpi-tile label="Damage claims" height="fill" [trend]="data().damageClaims" [upIsGood]="false" [drilldownTemplate]="weekPanel" />
+      </ng-template>
+
+      <ng-template dashWidget="shipments-trend" dashWidgetLabel="Weekly shipments">
+        <dash-chart-card heading="Weekly shipments" [subheading]="'Actuals and forecast, ' + scope()" [loading]="loading()">
+          <dash-trend-chart
+            label="Weekly shipments"
+            height="fill"
+            [series]="data().shipmentsVsForecast"
+            [thresholds]="[data().capacity]"
+            [annotations]="[data().peakSeason]"
+            [loading]="loading()"
+            [drilldownTemplate]="weekPanel"
+          />
+        </dash-chart-card>
+      </ng-template>
+
+      <ng-template dashWidget="delays" dashWidgetLabel="Why shipments ran late">
+        <dash-chart-card heading="Why shipments ran late" [subheading]="'Delays by cause, ' + scope()" [loading]="loading()">
+          <dash-pie-chart
+            label="Delay causes"
+            totalLabel="Delayed shipments"
+            legendPosition="bottom"
+            selectionMode="multiple"
+            height="fill"
+            [data]="data().delayCauses"
+            [(selected)]="selectedCauses"
+            [loading]="loading()"
+            [drilldownTemplate]="causePanel"
+          />
+        </dash-chart-card>
+      </ng-template>
+
+      <ng-template dashWidget="modes" dashWidgetLabel="Shipments by transport mode">
+        <dash-chart-card heading="Shipments by transport mode" subheading="Stacked by mode, with the 4-week average of the total" [loading]="loading()">
+          <dash-combo-chart
+            label="Shipments by transport mode"
+            syncGroup="ops-weeks"
+            height="fill"
+            [series]="modesWithAverage()"
+            [loading]="loading()"
+            [zoom]="weeks() === 52 ? 'slider' : 'none'"
+            [drilldownTemplate]="weekPanel"
+          />
+        </dash-chart-card>
+      </ng-template>
+
+      <ng-template dashWidget="ontime" dashWidgetLabel="On-time delivery trend">
+        <dash-chart-card heading="On-time delivery" [subheading]="'Share delivered by the promised date, ' + scope()" [loading]="loading()">
+          <dash-trend-chart
+            label="On-time delivery"
+            syncGroup="ops-weeks"
+            height="fill"
+            [series]="data().onTimeRate"
+            [thresholds]="[data().onTimeTarget]"
+            [yMin]="0.85"
+            [yMax]="1"
+            [smooth]="true"
+            [showEndLabels]="true"
+            [loading]="loading()"
+            [drilldownTemplate]="weekPanel"
+          />
+        </dash-chart-card>
+      </ng-template>
+
+      <ng-template dashWidget="sites" dashWidgetLabel="Busiest sites">
+        <dash-chart-card heading="Busiest sites" subheading="Pallets handled last week" [loading]="loading()">
+          <dash-bar-chart
+            label="Pallets handled per site"
+            orientation="horizontal"
+            granularity="category"
+            height="fill"
+            [series]="data().throughputBySite"
+            [thresholds]="[{ value: siteTarget(), label: 'Site target', status: 'good' }]"
+            [loading]="loading()"
+            [drilldownTemplate]="sitePanel"
+          />
+        </dash-chart-card>
+      </ng-template>
+    </dash-widget-board>
 
     <ng-template #weekPanel let-ctx let-close="close">
       <dash-stat-list [items]="pointStats(ctx)" />
@@ -212,6 +248,8 @@ const REGIONS: { value: Region; label: string }[] = [
     :host { display: block; }
     .filters { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin-bottom: 20px; }
     .region { width: 200px; }
+    .spacer { flex: 1; }
+    .edit-hint { margin: -8px 0 16px; color: var(--dash-ink-2); font-size: 0.875rem; max-width: 72ch; }
     .dash-demo-heading { margin: 24px 0 8px; font-size: 0.9375rem; font-weight: 600; color: var(--dash-ink); }
     .dash-demo-actions { display: flex; justify-content: flex-end; margin-top: 24px; }
   `,
@@ -219,6 +257,11 @@ const REGIONS: { value: Region; label: string }[] = [
 export class OperationsOverview {
   /** Simulated network latency when filters change, to show the loading state. */
   readonly latency = input(450);
+  /** localStorage key for the user's layout; `null` disables saving (e.g. in stories). */
+  readonly persistKey = input<string | null>('dash-demo-operations-layout');
+
+  protected readonly editing = signal(false);
+  protected readonly layout = signal<DashWidgetLayout[]>(DEFAULT_LAYOUT);
 
   protected readonly regions = REGIONS;
   protected readonly weeks = signal<Weeks>(26);
@@ -246,6 +289,10 @@ export class OperationsOverview {
   protected readonly siteTarget = computed(() => Math.round((4000 * this.data().capacity.value) / 13_500 / 100) * 100);
 
   private timer: ReturnType<typeof setTimeout> | undefined;
+
+  protected resetLayout(): void {
+    this.layout.set(DEFAULT_LAYOUT);
+  }
 
   protected setWeeks(weeks: Weeks): void {
     this.weeks.set(weeks);

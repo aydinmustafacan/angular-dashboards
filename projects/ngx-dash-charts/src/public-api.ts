@@ -20,3 +20,5 @@ export * from './lib/chart-card/chart-card';
 export * from './lib/data-table/data-table';
 export * from './lib/dashboard-grid/dashboard-grid';
 export * from './lib/stat-list/stat-list';
+export * from './lib/widget-board/layout';
+export * from './lib/widget-board/widget-board';

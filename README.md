@@ -27,6 +27,7 @@ Node **24 LTS** (Angular 22 needs ≥ 22.22.3). The version is pinned with Volta
 | `npm run build:lib` | Build the library into `dist/ngx-dash-charts` |
 | `npm run build` | Build the library and the showcase |
 | `npm run build-storybook` | Static Storybook in `dist/storybook` |
+| `npm test` | Library unit tests (Vitest) |
 
 ## Components
 
@@ -38,7 +39,8 @@ Node **24 LTS** (Angular 22 needs ≥ 22.22.3). The version is pinned with Volta
 | `dash-pie-chart` | Donut or pie: selection, live centre label, "Other" folding |
 | `dash-kpi-tile` | Headline number, change and sparkline |
 | `dash-chart-card` | Material card frame with table view and PNG / CSV export |
-| `dash-grid` + `dashSpan` | 12-column dashboard layout driven by container queries |
+| `dash-widget-board` | Drag-and-drop board (angular-gridster2): size rules, swaps, keyboard moves, saved layouts |
+| `dash-grid` + `dashSpan` | Static 12-column dashboard layout driven by container queries |
 | `dash-stat-list`, `dash-data-table` | Building blocks for drill-down panels and table views |
 
 Every chart has:

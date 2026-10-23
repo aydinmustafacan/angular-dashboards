@@ -86,3 +86,9 @@ dash-kpi-tile:focus-visible {
   color: var(--dash-muted, #7d8893);
   font-size: 0.75rem;
 }
+
+dash-kpi-tile.dash-fill .dash-kpi__spark {
+  flex: 1 1 0;
+  min-height: 28px;
+  height: auto;
+}

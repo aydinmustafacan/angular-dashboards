@@ -1,0 +1,160 @@
+dash-widget-board {
+  display: block;
+  position: relative;
+}
+
+gridster.dash-board {
+  background: transparent;
+  overflow: visible;
+  /* setGridSize writes an inline width that can ratchet up after a drag; only its height is wanted. */
+  width: 100% !important;
+}
+
+gridster.dash-board .gridster-column,
+gridster.dash-board .gridster-row {
+  border-color: transparent;
+}
+
+gridster.dash-board .gridster-column {
+  background: color-mix(in srgb, var(--dash-accent, #1d4f91) 5%, transparent);
+  border-radius: 12px;
+}
+
+gridster.dash-board .gridster-preview {
+  border: 2px dashed color-mix(in srgb, var(--dash-accent, #1d4f91) 60%, transparent);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--dash-accent, #1d4f91) 8%, transparent);
+}
+
+gridster-item.dash-board__cell {
+  overflow: visible;
+  background: transparent;
+  transition: transform 240ms cubic-bezier(0.2, 0, 0, 1), width 240ms, height 240ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  gridster-item.dash-board__cell {
+    transition: none;
+  }
+}
+
+gridster-item.dash-board__cell.gridster-item-moving,
+gridster-item.dash-board__cell.gridster-item-resizing {
+  box-shadow: none;
+  transition: none;
+}
+
+gridster-item.dash-board__cell.gridster-item-moving .dash-board__content {
+  box-shadow: 0 18px 40px -18px rgba(21, 32, 43, 0.5);
+  border-radius: 16px;
+}
+
+.dash-board__content {
+  height: 100%;
+}
+
+.dash-board__content > * {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* Table view inside a fixed-height cell scrolls within the card. */
+.dash-board__content dash-data-table {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.dash-board__content dash-data-table .wrap {
+  max-height: 100% !important;
+  height: 100%;
+}
+
+/* ── Edit mode ── */
+
+.dash-board__chrome {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px;
+  border: 2px dashed color-mix(in srgb, var(--dash-accent, #1d4f91) 45%, transparent);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--dash-surface, #fbfcfc) 35%, transparent);
+  cursor: grab;
+  outline: none;
+  touch-action: none;
+}
+
+.dash-board__chrome:hover {
+  border-color: var(--dash-accent, #1d4f91);
+}
+
+.dash-board__chrome:focus-visible {
+  border-style: solid;
+  border-color: var(--dash-accent, #1d4f91);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--dash-accent, #1d4f91) 25%, transparent);
+}
+
+gridster-item.gridster-item-moving .dash-board__chrome {
+  cursor: grabbing;
+  border-style: solid;
+  border-color: var(--dash-accent, #1d4f91);
+}
+
+.dash-board__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 5px 10px 5px 8px;
+  border-radius: 999px;
+  background: var(--dash-ink, #15202b);
+  color: var(--dash-surface, #fbfcfc);
+  font: 500 0.75rem/1.2 var(--dash-font, system-ui, sans-serif);
+  pointer-events: none;
+  /* Sits on the cell's top edge like a tab, so the widget's own heading stays readable. */
+  transform: translate(8px, -50%);
+  margin-top: -8px;
+}
+
+.dash-board__badge svg {
+  flex: none;
+  fill: currentColor;
+  opacity: 0.7;
+}
+
+.dash-board__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dash-board__size {
+  opacity: 0.7;
+  font-variant-numeric: tabular-nums;
+}
+
+.dash-board__menu {
+  flex: none;
+  background: var(--dash-surface, #fbfcfc) !important;
+  color: var(--dash-ink, #15202b) !important;
+  box-shadow: 0 0 0 1px var(--dash-border, rgba(21, 32, 43, 0.12));
+  cursor: pointer;
+}
+
+/* Bottom resize grip for charts. */
+gridster-item.dash-board__cell .gridster-item-resizable-handler.handle-s {
+  z-index: 4;
+  bottom: -6px;
+  left: 50%;
+  right: auto;
+  width: 48px;
+  height: 12px;
+  transform: translateX(-50%);
+  border-radius: 6px;
+  background: var(--dash-accent, #1d4f91);
+  box-shadow: 0 0 0 3px var(--dash-page, #eef1f3);
+}

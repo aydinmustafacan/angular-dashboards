@@ -50,6 +50,16 @@ dash-pie-chart {
   white-space: nowrap;
 }
 
+/* height="fill": take the parent's height (board cells, flex layouts). */
+.dash-fill {
+  height: 100%;
+  min-height: 0;
+}
+
+.dash-fill > .dash-chart {
+  height: 100%;
+}
+
 /* ── Tooltip: a compact waybill — dark heading strip, value rows, perforated tear-off hint ── */
 
 .dash-tip-host {

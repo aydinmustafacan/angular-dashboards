@@ -83,7 +83,9 @@ import { DashDataTable } from '../data-table/data-table';
     .subheading { margin: 2px 0 0; color: var(--dash-ink-2, #4d5a66); font-size: 0.8125rem; line-height: 1.4; }
     .actions { display: flex; align-items: center; gap: 8px; margin: -6px -10px -6px 0; }
     .more { color: var(--dash-ink-2, #4d5a66); }
+    .body { flex: 1 1 auto; min-height: 0; }
     .body.is-hidden { display: none; }
+    .table { flex: 1 1 auto; min-height: 0; }
   `,
 })
 export class DashChartCard {
