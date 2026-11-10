@@ -1,0 +1,274 @@
+/*
+ * <dash-calendar-grid>. Encapsulation is off, so these rules also reach the cells AG Grid draws
+ * outside the template, the cell renderers and the projected side panel. What goes inside a cell
+ * is styled by the caller's template.
+ */
+
+.dash-calendar-grid {
+  --dash-calendar-grid-selected: color-mix(in srgb, var(--dash-ink, #15202b) 9%, var(--dash-surface, #fbfcfc));
+  --dash-calendar-grid-sunken: color-mix(in srgb, var(--dash-ink, #15202b) 4%, var(--dash-surface, #fbfcfc));
+  --dash-calendar-grid-hover: color-mix(in srgb, var(--dash-ink, #15202b) 6%, transparent);
+
+  display: block;
+  container: dash-calendar-grid / inline-size;
+  color: var(--dash-ink, #15202b);
+  font-family: var(--dash-font, system-ui, sans-serif);
+}
+
+.dash-calendar-grid__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.dash-calendar-grid.has-aside .dash-calendar-grid__layout {
+  grid-template-columns: minmax(0, 1fr) var(--dash-calendar-grid-aside-width, 300px);
+}
+
+.dash-calendar-grid__main {
+  min-width: 0;
+  padding: 10px 0 0;
+  overflow: hidden;
+  background: var(--dash-surface, #fbfcfc);
+  border: 1px solid var(--dash-border, rgba(21, 32, 43, 0.12));
+  border-radius: var(--dash-calendar-grid-radius, 14px);
+}
+
+.dash-calendar-grid__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 0 12px 10px;
+}
+
+.dash-calendar-grid__period {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+}
+
+.dash-calendar-grid__title {
+  min-width: 9.5em;
+  margin: 0 10px 0 6px;
+  font-size: 1.125rem;
+  white-space: nowrap;
+}
+
+.dash-calendar-grid__tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.dash-calendar-grid__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--dash-grid, #e3e7ea);
+}
+
+.dash-calendar-grid__empty {
+  color: var(--dash-muted, #7d8893);
+}
+
+.dash-calendar-grid .dash-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ── AG Grid cells ── */
+
+.dash-calendar-grid .ag-header-cell.label-col,
+.dash-calendar-grid .ag-cell.label-col {
+  padding: 0 12px 0 16px;
+}
+
+.dash-calendar-grid .ag-header-cell.total-col,
+.dash-calendar-grid .ag-cell.total-col {
+  padding: 0 12px 0 8px;
+  font-weight: 600;
+}
+
+.dash-calendar-grid .ag-cell.total-col {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-variant-numeric: tabular-nums;
+}
+
+.dash-calendar-grid .ag-cell.label-col {
+  display: flex;
+  align-items: center;
+}
+
+.dash-calendar-grid .ag-header-cell.day-col,
+.dash-calendar-grid .ag-cell.day-col {
+  padding: 0;
+}
+
+/* The day cell fills its cell, so its background marks the selected column. */
+.dash-calendar-grid .ag-cell.day-col > * {
+  height: 100%;
+}
+
+.dash-calendar-grid .ag-row-pinned .ag-cell {
+  color: var(--dash-muted, #7d8893);
+  font-size: 0.75rem;
+}
+
+.dash-calendar-grid .ag-row-pinned .ag-cell.label-col {
+  color: var(--dash-ink, #15202b);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.dash-calendar-grid .ag-row-hover .ag-cell.label-col {
+  background: var(--dash-calendar-grid-sunken);
+}
+
+.dash-calendar-grid .ag-full-width-row {
+  background: var(--dash-calendar-grid-sunken);
+}
+
+.dash-calendar-grid.is-narrow .ag-header-cell.label-col,
+.dash-calendar-grid.is-narrow .ag-cell.label-col {
+  padding: 0 8px;
+}
+
+/* ── Day cells ── */
+
+.dash-calendar-grid__day-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 3px 1px;
+  cursor: pointer;
+}
+
+.dash-calendar-grid__day-cell.is-wide {
+  padding: 3px;
+}
+
+.dash-calendar-grid__day-cell.is-week-start {
+  padding-left: 7px;
+}
+
+.dash-calendar-grid__day-cell.is-selected,
+.dash-calendar-grid__day-header.is-selected {
+  background: var(--dash-calendar-grid-selected);
+}
+
+/* ── Day headers ── */
+
+.dash-calendar-grid__day-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 4px 1px;
+  cursor: pointer;
+}
+
+.dash-calendar-grid__day-header.is-week-start {
+  padding-left: 7px;
+}
+
+.dash-calendar-grid__date {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-width: 26px;
+  padding: 3px 0;
+  border-radius: 4px;
+  color: var(--dash-muted, #7d8893);
+  line-height: 1.15;
+}
+
+.dash-calendar-grid__day-header:hover .dash-calendar-grid__date:not(.is-today) {
+  background: var(--dash-calendar-grid-hover);
+}
+
+.dash-calendar-grid__dow {
+  font-size: 0.6875rem;
+  font-weight: 500;
+}
+
+.dash-calendar-grid__num {
+  color: var(--dash-ink, #15202b);
+  font-size: 0.8125rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.dash-calendar-grid__date.is-today {
+  background: var(--dash-ink, #15202b);
+  color: var(--dash-surface, #fbfcfc);
+}
+
+.dash-calendar-grid__date.is-today .dash-calendar-grid__num {
+  color: var(--dash-surface, #fbfcfc);
+}
+
+/* ── Group headings ── */
+
+.dash-calendar-grid__group-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+  padding: 0 16px;
+  color: var(--dash-muted, #7d8893);
+  font-size: 0.75rem;
+}
+
+.dash-calendar-grid__group-name {
+  color: var(--dash-ink-2, #4d5a66);
+  font-weight: 650;
+}
+
+/* ── Side panel ── */
+
+.dash-calendar-grid__aside {
+  position: sticky;
+  top: var(--dash-calendar-grid-aside-top, 72px);
+  max-height: calc(100vh - var(--dash-calendar-grid-aside-top, 72px) - 16px);
+  overflow-y: auto;
+  padding: 16px;
+  background: var(--dash-surface, #fbfcfc);
+  border: 1px solid var(--dash-border, rgba(21, 32, 43, 0.12));
+  border-radius: var(--dash-calendar-grid-radius, 14px);
+}
+
+/* Too narrow for the grid and the side panel together: the panel moves underneath. */
+@container dash-calendar-grid (max-width: 1180px) {
+  .dash-calendar-grid.has-aside .dash-calendar-grid__layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dash-calendar-grid__aside {
+    position: static;
+    max-height: none;
+  }
+}
+
+@container dash-calendar-grid (max-width: 480px) {
+  .dash-calendar-grid__title {
+    min-width: 0;
+    margin-right: 6px;
+  }
+}

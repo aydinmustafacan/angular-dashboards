@@ -18,6 +18,7 @@ Every component is standalone, signal-based and themeable, and works without Zon
 | `dash-widget-board` | Drag-and-drop dashboard board (angular-gridster2) with size rules, keyboard moves and saved layouts |
 | `dash-grid`, `dashSpan` | Static 12-column dashboard layout that responds to its container |
 | `dash-stat-list`, `dash-data-table` | Building blocks for drill-down panels and table views |
+| `dash-calendar-grid` | Rows against days with calendar controls (AG Grid): you template each cell; summary row, totals, groups and a side panel are optional |
 
 ## Set up
 
@@ -79,6 +80,41 @@ export const appConfig = { providers: [provideDashCharts()] };
   </ng-template>
 </dash-widget-board>
 ```
+
+## Calendar grid
+
+`dash-calendar-grid` puts any kind of row against the days of a week, two weeks or a month, with previous, next, Today and a period switch. It knows nothing about your rows: you decide what each cell shows with templates. It needs `ag-grid-angular`, `ag-grid-community` and `date-fns`.
+
+```html
+<dash-calendar-grid
+  label="Room bookings"
+  [rows]="rooms()"
+  [rowId]="byId"
+  [rowLabel]="byName"
+  [today]="today"
+  [(range)]="range"
+  [(anchor)]="anchor"
+  [(selectedDay)]="selectedDay"
+>
+  <ng-template [dashDayCell]="rooms()" let-room let-day="day" let-wide="wide">
+    {{ room.bookedOn(day) ? 'Booked' : 'Free' }}
+  </ng-template>
+</dash-calendar-grid>
+```
+
+Import `DASH_CALENDAR_GRID_IMPORTS`. Each optional region appears only when you provide it:
+
+| Region | How to add it |
+| --- | --- |
+| Row label | `ng-template [dashRowHeader]="rows" let-row` (default: `rowLabel(row)` as text) |
+| Summary row pinned under the header | `ng-template dashSummaryCell let-day`, plus `summaryLabel` and `summaryTotal` |
+| Sortable total column | `[total]="fn"`, plus `totalLabel` and optionally `ng-template [dashTotalCell]="rows" let-row let-value="value"` |
+| Groups with headings | `[groupBy]="fn"`, optionally `ng-template dashGroupHeading let-name let-size="size"` |
+| Extra toolbar controls | any element with `dashCalendarGridTools` |
+| Footer, such as a legend | any element with `dashCalendarGridFooter` |
+| Side panel | any element with `dashCalendarGridAside` and an `aria-label` |
+
+Days are `yyyy-MM-dd` strings in local time (`DashDayKey`). The grid responds to its own width: the side panel moves underneath below 1180px, and below 640px the total column scrolls with the days. Your templates can respond too, with `@container dash-calendar-grid (…)`.
 
 ## Data shape
 

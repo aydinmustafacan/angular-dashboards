@@ -26,3 +26,4 @@ export * from './lib/dashboard-grid/dashboard-grid';
 export * from './lib/stat-list/stat-list';
 export * from './lib/widget-board/layout';
 export * from './lib/widget-board/widget-board';
+export * from './lib/calendar-grid';

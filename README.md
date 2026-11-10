@@ -42,6 +42,7 @@ Node **24 LTS** (Angular 22 needs ≥ 22.22.3). The version is pinned with Volta
 | `dash-widget-board` | Drag-and-drop board (angular-gridster2): size rules, swaps, keyboard moves, saved layouts |
 | `dash-grid` + `dashSpan` | Static 12-column dashboard layout driven by container queries |
 | `dash-stat-list`, `dash-data-table` | Building blocks for drill-down panels and table views |
+| `dash-calendar-grid` | Rows against days with calendar controls (AG Grid); cells are your templates |
 
 Every chart has:
 
